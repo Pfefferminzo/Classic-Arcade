@@ -1,3 +1,13 @@
 body {
     text-align: center;
 }
+
+
+#resetButton  {
+	display: none;
+	width: 300px;
+	position: absolute;
+	height: 100px;
+	left: 830px;
+	
+}
