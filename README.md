@@ -39,6 +39,10 @@ Your player can move up,down,left and right.
  - The speed of the bugs varies but is align with the computer/browser speed
  - Added reset button
  - Finished first draft for review
+ 
+ ### Third draft 08.01.2018
+ 
+ - Refined readme with new information
 
 
 
