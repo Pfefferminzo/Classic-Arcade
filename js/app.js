@@ -1,60 +1,95 @@
 // Enemies our player must avoid
 class Enemy {
-  constructor() {
+  constructor(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 0;
-    this.y = 0;
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
     }
-    updatePosition() {
-      this.location = [0,1,0,0];
+    // this method updates the enemies. They can move right (r) or left (l) and the speed is multiplied with the timestamp
+    update(dt, enemyNumber) {
+          if (this.x < 5) {
+          this.x += 1*dt*this.speed;
+          } else {
+          addNewEnemies(enemyNumber);
+        }
+    }
+  render() {
+    // Draw the enemy on the screen, required method for game
+    ctx.drawImage(Resources.get(this.sprite),this.x * 101, this.y * 83);
   }
 }
+// This function adds removes the enemies which ran out of the screen and generate a random one
+function addNewEnemies(enemyNumber) {
+            allEnemies.splice(enemyNumber, 1);
+            let enemy1 = new Enemy(0,getRandomInt(1,4),getRandomInt(1,5));
+            allEnemies.splice(enemyNumber, 0, enemy1)
+}
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-};
+// function for randomize the values for enemy generation
+function getRandomInt(min, max) {
+   min = Math.ceil(min);
+   max = Math.floor(max);
+   return Math.floor(Math.random() * (max - min)) + min;
+}
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// player class
 class Player {
   constructor() {
     this.name = 'D';
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = 'images/char-boy.png';
+    this.x = 2;
+    this.y = 5;
   }
-  handleInput() {
-    //console.log('handle');
-  }
-  update() {
-    //console.log('update');
+  // handles the input of the player with the right keycodes and looks that the player is not moving out of borders
+  handleInput(keyCode) {
+    if (keyCode === 'left') {
+
+      if (this.x != 0) {
+        this.x -= 1;
+      }
+
+    }
+    else if (keyCode === 'right') {
+      if (this.x != 4) {
+        this.x += 1;
+      }
+
+    }
+    else if (keyCode === 'up') {
+      if (this.y != 0) {
+        this.y -= 1;
+      }
+
+    }
+    else if (keyCode === 'down') {
+      if (this.y != 5) {
+        this.y += 1;
+      }
+    }
   }
   render() {
-    //console.log('render');
+    // Draw the enemy on the screen, required method for game
+    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83);
   }
 }
 
-var player = new Player();
-var enemy = new Enemy();
-enemy.render();
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Generate the initial enemies with the needed parameters.
+let enemy1 = new Enemy(0,1,1);
+let enemy2 = new Enemy(4,2,9);
+let enemy3 = new Enemy(0,3,4);
 
-var allEnemies = [];
+
+// Place the player object in a variable called player
+var player = new Player();
+
+// Place all enemy objects in an array called allEnemies
+var allEnemies = [enemy1,enemy2,enemy3];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

@@ -12,7 +12,7 @@
  * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
-
+const resetButton = document.getElementById("resetButton");
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -63,7 +63,6 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
         lastTime = Date.now();
         main();
     }
@@ -79,7 +78,29 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+         checkCollisions(allEnemies);
+         checkGameEnding(player,allEnemies);
+    }
+    
+    // check the collisions and if the player hits an enemy reset it to the starting position
+    function checkCollisions(allEnemies) {
+    allEnemies.forEach(function(enemy) {
+      if (player.x === Math.round(enemy.x)) {
+        if (player.y === Math.round(enemy.y)) {
+          player.x = 2;
+          player.y = 5;
+        }
+      }
+    })
+    }
+     // if the player reaches the other side, show the reset button and stop the enemies
+    function checkGameEnding(player, allEnemies) {
+        if (player.y === 0) {
+           allEnemies.forEach(function(enemy) {
+            enemy.x = 0;
+        });
+           resetButton.style.display = "block";
+        }
     }
 
     /* This is called by the update function and loops through all of the
@@ -90,10 +111,12 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        let count = 0;
         allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
+            enemy.update(dt,count);
+            count += 1;
         });
-        player.update();
+        count = 0;
     }
 
     /* This function initially draws the "game level", it will then call
@@ -156,14 +179,11 @@ var Engine = (function(global) {
         player.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
-    function reset() {
-        // noop
-    }
-
+   resetButton.onclick = function () {          
+        player.x = 2;
+        player.y = 5;
+        resetButton.style.display = "none";
+    };
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
